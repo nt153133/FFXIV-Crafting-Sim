@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFXIVCraftingSim"
     xmlns:conv="clr-namespace:FFXIVCraftingSim.Converters"
+    xmlns:gui="clr-namespace:FFXIVCraftingSim.GUI"
     x:Class="FFXIVCraftingSim.MainWindow"
         mc:Ignorable="d"
         Title="Crafting Simulator" Height="900" Width="1160" Loaded="Window_Loaded" Closing="Window_Closing" FontFamily="Consolas"
@@ -200,7 +201,7 @@
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
                             <ListView.ItemTemplate>
-                                <DataTemplate DataType="CraftingActionContainer">
+                                <DataTemplate DataType="gui:CraftingActionContainer">
                                     <Grid Height="70"  ToolTip="{Binding Action.Name}">
                                         <Border BorderBrush="#FF494949" Background="#FFD8D8D8" BorderThickness="1">
                                             <Image Width="32" Height="30" Source ="{Binding Source}" Margin="0,25,0,0" VerticalAlignment="Top" />
@@ -304,7 +305,7 @@
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                     <ListView.ItemTemplate>
-                        <DataTemplate DataType="CraftingBuffContainer">
+                        <DataTemplate DataType="gui:CraftingBuffContainer">
                             <Grid >
                                 <Border BorderBrush="Black" Background="#FFD8D8D8" BorderThickness="1" >
                                     <Image Width="20" Height="30" Source ="{Binding Source}" />
