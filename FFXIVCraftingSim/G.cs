@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FFXIVCraftingSim
 {
@@ -91,12 +92,20 @@ namespace FFXIVCraftingSim
                 dir = directory2;
             else
             {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.Title = "Select FFXIV Location";
-                if (dialog.ShowDialog() == false)
-                    App.Current.Shutdown(0);
-                string name = Directory.GetParent(Path.GetDirectoryName(dialog.FileName)).FullName;
+                string name = "";
+                using(var fbd = new FolderBrowserDialog())
+                {
+                    fbd.Description = "Select FFXIV Location with game/boot folders";
+                    DialogResult result = fbd.ShowDialog();
+                    
+                    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                    {
+                        name = fbd.SelectedPath; 
+                    }
+                }
                 dir = name;
+                if (dir == "")
+                    App.Current.Shutdown(0);
             }
             GameData.Init(dir);
         }
