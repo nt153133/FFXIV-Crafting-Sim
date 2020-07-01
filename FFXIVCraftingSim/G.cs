@@ -78,6 +78,7 @@ namespace FFXIVCraftingSim
 
         public static void Init(MainWindow window)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             DataStreamEx s = new DataStreamEx();
             MainWindow = window;
 
