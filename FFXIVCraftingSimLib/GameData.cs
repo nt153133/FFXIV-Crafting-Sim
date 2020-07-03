@@ -26,11 +26,13 @@ namespace FFXIVCraftingSimLib
         public static event System.Action Initialized = delegate { };
         public static event System.Action Reloaded = delegate { };
 
-        public static void Init(string gameFilesPath)
+        public static async Task Init(string gameFilesPath)
         {
-            Game = new ARealmReversed(gameFilesPath, SaintCoinach.Ex.Language.English);
-            if (InitTask == null || InitTask.IsCompleted)
-                InitTask = Task.Run(() =>
+            Game = new ARealmReversed(gameFilesPath, @"SaintCoinach.History.zip", SaintCoinach.Ex.Language.English);
+            Game.Packs.GetPack(new SaintCoinach.IO.PackIdentifier("exd", SaintCoinach.IO.PackIdentifier.DefaultExpansion, 0)).KeepInMemory = true;
+            Console.WriteLine("Game version: {0}", Game.GameVersion);
+            Console.WriteLine("Definition version: {0}", Game.DefinitionVersion);
+            await Task.Run(() =>
                 {
                     ReadLevelDifferences();
                     ReadRecipeRotations();

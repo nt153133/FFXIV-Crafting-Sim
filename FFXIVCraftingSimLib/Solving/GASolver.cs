@@ -45,7 +45,7 @@ namespace FFXIVCraftingSimLib.Solving
         }
 
 
-        public void Start(int taskCount = 10, int chromosomeCount = 190, bool leaveStartingActions = false, int timeLimit = 0, int iterationLimit = 0)
+        public async Task Start(int taskCount = 10, int chromosomeCount = 190, bool leaveStartingActions = false, int timeLimit = 0, int iterationLimit = 0)
         {
             AvailableActions = CraftingAction.CraftingActions.Values.Where(x => x.Level <= Sim.Level).Select(y => y.Id).ToArray();
             if (Populations == null)
@@ -103,7 +103,7 @@ namespace FFXIVCraftingSimLib.Solving
             CurrentTimeLimit = timeLimit;
             CurrentIterationLimit = iterationLimit;
 
-            Task.Run(() =>
+            await Task.Run(() =>
             {
                 Task.Run(UpdateLoop);
                 for (int i = 0; i < TaskCount; i++)
@@ -112,7 +112,9 @@ namespace FFXIVCraftingSimLib.Solving
                     Tasks[i].Start();
                 }
 
+                Task.WaitAll(Tasks);
             });
+            
         }
 
         private void InnerStart(object index)
@@ -137,8 +139,8 @@ namespace FFXIVCraftingSimLib.Solving
 
         private void UpdateLoop()
         {
-            int currentTick = Environment.TickCount;
-            int stopAtTick = currentTick + CurrentTimeLimit;
+            //int currentTick = Environment.TickCount;
+            //int stopAtTick = currentTick + CurrentTimeLimit;
 
             bool useTimeLimit = CurrentTimeLimit > 0;
             bool useIterationLimit = CurrentIterationLimit > 0;
@@ -152,14 +154,14 @@ namespace FFXIVCraftingSimLib.Solving
                     NeedsUpdate = false;
                    
                     if (CopyBestRotationToPopulations)
-                    for (int i = 0; i < Populations.Length; i++)
-                        Populations[i].PendingBest = BestChromosome.Clone();
+                        for (int i = 0; i < Populations.Length; i++)
+                            Populations[i].PendingBest = BestChromosome.Clone();
                     CraftingSim sim = Sim.Clone(true);
                     Utils.AddRotationFromSim(sim);
                     FoundBetterRotation(sim);
                 }
 
-                if ((useTimeLimit && Environment.TickCount >= stopAtTick) || (useIterationLimit && Iterations >= CurrentIterationLimit))
+                if ((useIterationLimit && (Iterations >= CurrentIterationLimit)))
                     Continue = false;
             }
 

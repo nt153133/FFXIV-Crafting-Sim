@@ -62,6 +62,24 @@ namespace FFXIVCraftingSimLib.Types.GameData
                 };
             return AbstractRecipeInfo;
         }
+        
+        public static explicit operator RecipeInfo(Recipe value)
+        {
+            var recipeLevelTable = value.RecipeLevelTable;
+            return new RecipeInfo
+            {
+                Id = value.Key,
+                Name = value.ResultItem.Name,
+                Level = recipeLevelTable.Key,
+                ClassJobLevel = recipeLevelTable.ClassJobLevel,
+                ClassJob = (ClassJobInfo)value.ClassJob.Key,
+                RequiredCraftsmanship = recipeLevelTable.SuggestedCraftsmanship,
+                RequiredControl = recipeLevelTable.SuggestedControl,
+                Durability = recipeLevelTable.Durability * value.DurabilityFactor / 100,
+                MaxProgress = recipeLevelTable.Difficulty * value.DifficultyFactor / 100,
+                MaxQuality = recipeLevelTable.Quality * value.QualityFactor / 100
+            };
+        }
     }
 
     public class AbstractRecipeInfo :IEquatable<AbstractRecipeInfo>
